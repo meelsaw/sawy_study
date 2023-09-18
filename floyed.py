@@ -76,8 +76,10 @@ def performance_test(num_points):
 
 
 if __name__ == '__main__':
+    print("Printing results:")
     for r in result:
         print(r)
+    print("starting unit testing:")
     test_floyd()
     print("All tests passed.")
     print("starting performance test:")
