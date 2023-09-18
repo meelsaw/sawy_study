@@ -1,6 +1,8 @@
 import numpy as np
 import timeit
 import random
+import sys
+import itertools
 
 
 def floyd_min_dist(dist, i, j, k):
@@ -57,6 +59,20 @@ def test_floyd():
     assert test[2][3] == 1
 
 
+def imperative_floyd(distance):
+    MAX_LENGTH = len(distance[0])
+    for intermediate, start_node, end_node in (itertools.product(
+            range(MAX_LENGTH), range(MAX_LENGTH), range(MAX_LENGTH))):
+
+        if start_node == end_node:
+            distance[start_node][end_node] = 0
+            continue
+
+    distance[start_node][end_node] = min(distance[start_node][end_node],
+                                         distance[start_node][intermediate] + distance[intermediate][end_node])
+    return distance
+
+
 def performance_test(num_points):
     # Generate a random graph
     graph = [[np.inf] * num_points for _ in range(num_points)]
@@ -70,9 +86,11 @@ def performance_test(num_points):
 
     # Measure the execution time of the algorithm
     execution_time = timeit.timeit(lambda: floyd_main(graph), number=1)
+    execution_time_2 = timeit.timeit(lambda: imperative_floyd(graph), number=1)
 
     print(f"Number of vertices: {num_points}")
-    print(f"Execution time: {execution_time:.6f} seconds")
+    print(f"Execution time recursive: {execution_time:.6f} seconds")
+    print(f"Execution time imperative: {execution_time_2:.6f} seconds")
 
 
 if __name__ == '__main__':
@@ -85,3 +103,4 @@ if __name__ == '__main__':
     print("starting performance test:")
     for v in [10, 50, 100]:
         performance_test(v)
+
