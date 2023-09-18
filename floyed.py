@@ -1,4 +1,6 @@
 import numpy as np
+import timeit
+import random
 
 
 def floyd_min_dist(dist, i, j, k):
@@ -34,8 +36,6 @@ example = [
 ]
 
 result = floyd_main(example)
-for r in result:
-    print(r)
 
 
 # Unit tests
@@ -57,6 +57,29 @@ def test_floyd():
     assert test[2][3] == 1
 
 
+def performance_test(num_points):
+    # Generate a random graph
+    graph = [[np.inf] * num_points for _ in range(num_points)]
+    for i in range(num_points):
+        for j in range(num_points):
+            if i == j:
+                graph[i][j] = 0
+            # Simulate a random graph with edge weights between 1 and 100
+            elif i < j:
+                graph[i][j] = graph[j][i] = random.randint(1, 100)
+
+    # Measure the execution time of the algorithm
+    execution_time = timeit.timeit(lambda: floyd_main(graph), number=1)
+
+    print(f"Number of vertices: {num_points}")
+    print(f"Execution time: {execution_time:.6f} seconds")
+
+
 if __name__ == '__main__':
+    for r in result:
+        print(r)
     test_floyd()
     print("All tests passed.")
+    print("starting performance test:")
+    for v in [10, 50, 100]:
+        performance_test(v)
